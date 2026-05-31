@@ -1,8 +1,6 @@
-# Вміст: Опис структури даних. Якщо використовується ORM, тут знаходяться класи таблиць (Student, Teacher, Course, Grade, Classroom, Schedule). Якщо використовується чистий SQL, тут можуть зберігатися DDL-запити (CREATE TABLE ...).
-#
-# Зв'язки: Не має внутрішніх залежностей від інших модулів проекту (лише імпорти бібліотек ORM).
-#
-# Експортується до: storage/db_repository.py.
+"""
+Структура даних. Визначає моделі SQLAlchemy для таблиць бази даних.
+"""
 
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import declarative_base, relationship
@@ -15,7 +13,8 @@ class Student(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(100), nullable=False)
-    group_id = Column(String(20), nullable=False)
+    specialization = Column(String(100), nullable=False)  # "Математика", "Статистика", etc.
+    course = Column(String(50), nullable=False)  # "1 курс бакалаврату", "1 курс магістратури", etc.
 
     grades = relationship("Grade", back_populates="student", cascade="all, delete-orphan")
 
@@ -27,19 +26,19 @@ class Teacher(Base):
     name = Column(String(100), nullable=False)
     department = Column(String(100), nullable=False)
 
-    courses = relationship("Course", back_populates="teacher")
+    disciplines = relationship("Discipline", back_populates="teacher")
 
 
-class Course(Base):
-    __tablename__ = 'courses'
+class Discipline(Base):
+    __tablename__ = 'disciplines'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     title = Column(String(100), nullable=False)
     teacher_id = Column(Integer, ForeignKey('teachers.id'), nullable=False)
 
-    teacher = relationship("Teacher", back_populates="courses")
-    grades = relationship("Grade", back_populates="course", cascade="all, delete-orphan")
-    schedules = relationship("Schedule", back_populates="course", cascade="all, delete-orphan")
+    teacher = relationship("Teacher", back_populates="disciplines")
+    grades = relationship("Grade", back_populates="discipline", cascade="all, delete-orphan")
+    schedules = relationship("Schedule", back_populates="discipline", cascade="all, delete-orphan")
 
 
 class Classroom(Base):
@@ -58,21 +57,21 @@ class Grade(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     student_id = Column(Integer, ForeignKey('students.id'), nullable=False)
-    course_id = Column(Integer, ForeignKey('courses.id'), nullable=False)
+    discipline_id = Column(Integer, ForeignKey('disciplines.id'), nullable=False)
     value = Column(Integer, nullable=False)
 
     student = relationship("Student", back_populates="grades")
-    course = relationship("Course", back_populates="grades")
+    discipline = relationship("Discipline", back_populates="grades")
 
 
 class Schedule(Base):
     __tablename__ = 'schedules'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    course_id = Column(Integer, ForeignKey('courses.id'), nullable=False)
+    discipline_id = Column(Integer, ForeignKey('disciplines.id'), nullable=False)
     classroom_id = Column(Integer, ForeignKey('classrooms.id'), nullable=False)
     day_of_week = Column(String(20), nullable=False)
     time_slot = Column(String(20), nullable=False)
 
-    course = relationship("Course", back_populates="schedules")
+    discipline = relationship("Discipline", back_populates="schedules")
     classroom = relationship("Classroom", back_populates="schedules")
