@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Список аудиторій</h2>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Корпус</th>
+            <th>Номер</th>
+            <th>Місткість</th>
+            <th>Дія</th>
+        </tr>
+        {% for classroom in classrooms %}
+        <tr>
+            <td>{{ classroom.id }}</td>
+            <td>{{ classroom.building }}</td>
+            <td>{{ classroom.room_number }}</td>
+            <td>{{ classroom.capacity }}</td>
+            <td>
+                <form action="/classrooms/{{ classroom.id }}/delete" method="POST" style="margin:0; padding:0; background:none; border:none; width:auto;">
+                    <button type="submit" style="color: red; background: none; border: none; cursor: pointer; text-decoration: underline; padding: 0;">Видалити</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <form class="add-form" action="/classrooms/add" method="POST">
+        <h3>Додати аудиторію</h3>
+
+        <label>Корпус:</label>
+        <select name="building" required>
+            <option value="" disabled selected>Оберіть корпус</option>
+            <option value="Головний («Червоний») корпус">Головний («Червоний») корпус</option>
+            <option value="Корпус Механіко-математичного факультету">Корпус Механіко-математичного факультету</option>
+            <option value="Корпус Фізичного факультету">Корпус Фізичного факультету</option>
+            <option value="Корпус Факультету комп'ютерних наук та кібернетики">Корпус Факультету комп'ютерних наук та кібернетики</option>
+            <option value="Корпус Інституту післядипломної освіти">Корпус Інституту післядипломної освіти</option>
+        </select>
+
+        <label>Номер аудиторії:</label>
+        <input type="number" name="room_number" min="0" max="1000" required>
+
+        <label>Місткість:</label>
+        <input type="number" name="capacity" min="1" required>
+
+        <button type="submit">Зберегти</button>
+    </form>
+{% endblock %}

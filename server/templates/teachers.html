@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Список викладачів</h2>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>ПІБ</th>
+            <th>Кафедра</th>
+            <th>Дія</th>
+        </tr>
+        {% for teacher in teachers %}
+        <tr>
+            <td>{{ teacher.id }}</td>
+            <td>{{ teacher.name }}</td>
+            <td>{{ teacher.department }}</td>
+            <td>
+                <form action="/teachers/{{ teacher.id }}/delete" method="POST" style="margin:0; padding:0; background:none; border:none; width:auto;">
+                    <button type="submit" style="color: red; background: none; border: none; cursor: pointer; text-decoration: underline; padding: 0;">Видалити</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <form class="add-form" action="/teachers/add" method="POST">
+        <h3>Додати викладача</h3>
+        <label>ПІБ:</label>
+        <input type="text" name="name" required>
+
+        <label>Кафедра:</label>
+        <select name="department" required>
+            <option value="" disabled selected>Оберіть кафедру</option>
+            <option value="Кафедра математичного аналізу">Кафедра математичного аналізу</option>
+            <option value="Кафедра алгебри і комп’ютерної математики">Кафедра алгебри і комп’ютерної математики</option>
+            <option value="Кафедра геометрії">Кафедра геометрії</option>
+            <option value="Кафедра інтегральних та диференціальних рівнянь">Кафедра інтегральних та диференціальних рівнянь</option>
+            <option value="Кафедра теорії ймовірностей, статистики та актуарної математики">Кафедра теорії ймовірностей, статистики та актуарної математики</option>
+            <option value="Кафедра загальної математики">Кафедра загальної математики</option>
+            <option value="Кафедра теоретичної та прикладної механіки">Кафедра теоретичної та прикладної механіки</option>
+            <option value="Кафедра комп’ютерних методів механіки і процесів керування">Кафедра комп’ютерних методів механіки і процесів керування</option>
+            <option value="Кафедра математичної фізики">Кафедра математичної фізики</option>
+        </select>
+
+        <button type="submit">Зберегти</button>
+    </form>
+{% endblock %}

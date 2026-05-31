@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Управління навчальним процесом</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+
+        /* Стилі навігаційної панелі */
+        nav {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+        }
+        nav a {
+            margin-right: 15px;
+            text-decoration: none;
+            color: #0056b3;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        nav a:hover { text-decoration: underline; color: #003d82; }
+
+        /* Стилі таблиць та форм */
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; margin-bottom: 30px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f4f4f4; }
+
+        form.add-form { margin-top: 20px; padding: 15px; border: 1px solid #ccc; width: 400px; background-color: #f9f9f9; }
+        form.add-form label { display: block; margin-bottom: 5px; font-weight: bold; }
+        form.add-form input, form.add-form select { width: 100%; margin-bottom: 15px; padding: 5px; box-sizing: border-box; }
+        form.add-form button { padding: 8px 15px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="/">Головна</a>
+        <a href="/students">Студенти</a>
+        <a href="/teachers">Викладачі</a>
+        <a href="/courses">Курси</a>
+        <a href="/classrooms">Аудиторії</a>
+        <a href="/grades">Оцінки</a>
+        <a href="/schedule">Розклад</a>
+    </nav>
+
+    {% block content %}
+    {% endblock %}
+
+</body>
+</html>

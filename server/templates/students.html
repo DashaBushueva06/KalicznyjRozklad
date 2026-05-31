@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Список студентів</h2>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>ПІБ</th>
+            <th>Група</th>
+            <th>Дія</th>
+        </tr>
+        {% for student in students %}
+        <tr>
+            <td>{{ student.id }}</td>
+            <td>{{ student.name }}</td>
+            <td>{{ student.group_id }}</td>
+            <td>
+                <form action="/students/{{ student.id }}/delete" method="POST" style="margin:0; padding:0; border:none; width:auto;">
+                    <button type="submit">Видалити</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h3>Додати студента</h3>
+    <form action="/students/add" method="POST">
+        <label>ПІБ:</label><br>
+        <input type="text" name="name" required><br><br>
+
+        <label>Група:</label><br>
+        <input type="text" name="group_id" required><br><br>
+
+        <button type="submit">Зберегти</button>
+    </form>
+{% endblock %}
