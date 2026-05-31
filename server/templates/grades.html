@@ -7,7 +7,7 @@
         <tr>
             <th>ID</th>
             <th>Студент</th>
-            <th>Курс</th>
+            <th>Дисципліна</th>
             <th>Оцінка</th>
             <th>Дія</th>
         </tr>
@@ -15,7 +15,7 @@
         <tr>
             <td>{{ grade.id }}</td>
             <td>{{ grade.student.name if grade.student else 'Невідомо' }}</td>
-            <td>{{ grade.course.title if grade.course else 'Невідомо' }}</td>
+            <td>{{ grade.discipline.title if grade.discipline else 'Невідомо' }}</td>
             <td>{{ grade.value }}</td>
             <td>
                 <form action="/grades/{{ grade.id }}/delete" method="POST" style="margin:0;">
@@ -32,20 +32,20 @@
         <select name="student_id" required>
             <option value="" disabled selected>Оберіть студента</option>
             {% for student in students %}
-            <option value="{{ student.id }}">{{ student.name }} ({{ student.group_id }})</option>
+            <option value="{{ student.id }}">{{ student.name }} ({{ student.course }})</option>
             {% endfor %}
         </select>
 
-        <label>Курс:</label>
-        <select name="course_id" required>
-            <option value="" disabled selected>Оберіть курс</option>
-            {% for course in courses %}
-            <option value="{{ course.id }}">{{ course.title }}</option>
+        <label>Дисципліна:</label>
+        <select name="discipline_id" required>
+            <option value="" disabled selected>Оберіть дисципліну</option>
+            {% for discipline in disciplines %}
+            <option value="{{ discipline.id }}">{{ discipline.title }}</option>
             {% endfor %}
         </select>
 
-        <label>Оцінка:</label>
-        <input type="number" name="value" min="0" max="100" required>
+        <label>Оцінка (60-100):</label>
+        <input type="number" name="value" min="60" max="100" required>
 
         <button type="submit">Зберегти</button>
     </form>
