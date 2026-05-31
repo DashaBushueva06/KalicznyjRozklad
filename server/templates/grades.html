@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Управління оцінками студентів</h2>
+
+    <form class="add-form" action="/grades/add" method="POST" style="margin-bottom: 25px;">
+        <h3>Додати оцінку</h3>
+        <label>Студент:</label>
+        <select name="student_id" required>
+            <option value="" disabled selected>Оберіть студента</option>
+            {% for student in students %}
+            <option value="{{ student.id }}">{{ student.name }} ({{ student.course }})</option>
+            {% endfor %}
+        </select>
+
+        <label>Дисципліна:</label>
+        <select name="discipline_id" required>
+            <option value="" disabled selected>Оберіть дисципліну</option>
+            {% for discipline in disciplines %}
+            <option value="{{ discipline.id }}">{{ discipline.title }}</option>
+            {% endfor %}
+        </select>
+
+        <label>Оцінка (60-100):</label>
+        <input type="number" name="value" min="60" max="100" required>
+
+        <button type="submit">Зберегти</button>
+    </form>
+
+    <h3>Журнал успішності</h3>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Студент</th>
+            <th>Дисципліна</th>
+            <th>Оцінка</th>
+            <th>Дія</th>
+        </tr>
+        {% for grade in grades %}
+        <tr>
+            <td>{{ grade.id }}</td>
+            <td>{{ grade.student.name if grade.student else 'Невідомо' }}</td>
+            <td>{{ grade.discipline.title if grade.discipline else 'Невідомо' }}</td>
+            <td>{{ grade.value }}</td>
+            <td>
+                <form action="/grades/{{ grade.id }}/delete" method="POST" style="margin:0;">
+                    <button type="submit" style="color: red; background: none; border: none; cursor: pointer; text-decoration: underline; padding: 0;">Видалити</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

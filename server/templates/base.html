@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управління навчальним процесом | Мех-Мат КНУ</title>
+    <style>
+        /* Глобальні налаштування сайту */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            background-color: #f4f6f9;
+            color: #333;
+        }
+
+        /* Шапка сайту з логотипом та меню */
+        header {
+            background-color: #1f4e78; /* Фірмовий темно-синій колір */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 10px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-area img {
+            height: 50px; /* Акуратний розмір для твого логотипу */
+            width: auto;
+            object-fit: contain;
+        }
+
+        .logo-area h1 {
+            color: #ffffff;
+            font-size: 20px;
+            margin: 0;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Навігаційна панель */
+        nav {
+            display: flex;
+            gap: 5px;
+        }
+        nav a {
+            text-decoration: none;
+            color: #e2e8f0;
+            font-weight: 500;
+            font-size: 15px;
+            padding: 10px 15px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+        }
+        nav a.active {
+            background-color: #ffffff;
+            color: #1f4e78;
+        }
+
+        /* Контейнер для контенту сторінок */
+        .container {
+            max-width: 1300px;
+            margin: 40px auto;
+            padding: 0 30px;
+        }
+
+        h2 {
+            color: #1f4e78;
+            font-size: 28px;
+            margin-top: 0;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #2c3e50;
+            font-size: 20px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        /* Нові сучасні картки для форм та фільтрів (Flex-панелі) */
+        form.add-form, .filter-box {
+            background: #ffffff;
+            padding: 25px;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            box-sizing: border-box;
+        }
+
+        form.add-form h3, .filter-box h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #1f4e78;
+            font-size: 18px;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 10px;
+        }
+
+        form.add-form label, .filter-box label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #4a5568;
+        }
+
+        form.add-form input, form.add-form select, .filter-box select {
+            width: 100%;
+            margin-bottom: 18px;
+            padding: 10px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 14px;
+            background-color: #fff;
+            color: #333;
+            transition: border-color 0.2s;
+        }
+
+        form.add-form input:focus, form.add-form select:focus, .filter-box select:focus {
+            outline: none;
+            border-color: #1f4e78;
+            box-shadow: 0 0 0 3px rgba(31, 78, 120, 0.1);
+        }
+
+        form.add-form button {
+            width: 100%;
+            padding: 12px;
+            background-color: #1f4e78;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        form.add-form button:hover {
+            background-color: #153552;
+        }
+
+        /* Стилізація таблиць (М'який, сучасний вигляд без грубих ліній) */
+        .table-container {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 0;
+        }
+
+        th, td {
+            padding: 14px 18px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: #4a5568;
+            font-weight: 600;
+            border-bottom: 2px solid #edf2f7;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            border-bottom: 1px solid #edf2f7;
+            color: #2d3748;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: #f8fafc; /* Підсвічування рядка при наведенні мишкою */
+        }
+
+        /* Кнопки видалення у вигляді акуратних баджів */
+        .delete-btn {
+            color: #e53e3e;
+            background: rgba(229, 62, 62, 0.1);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .delete-btn:hover {
+            background-color: #e53e3e;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-area">
+            <img src="{{ url_for('static', filename='Logo.png') }}" alt="Мех-Мат Лого">
+            <h1>Мех-Мат Система</h1>
+        </div>
+        <nav>
+            <a href="/">Головна</a>
+            <a href="/students">Студенти</a>
+            <a href="/teachers">Викладачі</a>
+            <a href="/disciplines">Дисципліни</a>
+            <a href="/classrooms">Аудиторії</a>
+            <a href="/grades">Оцінки</a>
+            <a href="/schedule">Розклад</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <script>
+        document.querySelectorAll('nav a').forEach(link => {
+            if (link.getAttribute('href') === window.location.pathname) {
+                link.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>
