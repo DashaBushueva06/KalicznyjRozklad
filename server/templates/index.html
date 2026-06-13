@@ -1,6 +1,168 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Система управління навчальним процесом</h1>
-    <p>Використовуйте навігаційне меню для перегляду та редагування даних бази.</p>
+<style>
+    /* Базові стилі контейнера */
+    .dashboard-hero {
+        background: linear-gradient(135deg, #1f4e78 0%, #2c6ca6 100%);
+        color: #ffffff;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(31, 78, 120, 0.15);
+        margin-bottom: 30px;
+    }
+
+    .dashboard-hero h2 {
+        color: #ffffff;
+        border-bottom: none;
+        margin-top: 0;
+        margin-bottom: 15px;
+        font-size: 30px;
+    }
+
+    .dashboard-hero p {
+        font-size: 16px;
+        line-height: 1.7;
+        margin: 0;
+        opacity: 0.95;
+        max-width: 900px;
+    }
+
+    /* Симетрична сітка для збалансованого контенту */
+    .knu-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Дві однакові колонки */
+        gap: 30px;
+    }
+
+    /* Адаптивність для менших екранів */
+    @media (max-width: 900px) {
+        .knu-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .info-section {
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        margin-bottom: 30px;
+        height: max-content;
+    }
+
+    .info-section h3 {
+        color: #1f4e78;
+        font-size: 22px;
+        margin-top: 0;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #f1f5f9;
+        padding-bottom: 10px;
+    }
+
+    /* Сучасна адаптація "blueTable" */
+    .modern-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .modern-table td {
+        padding: 16px;
+        border-bottom: 1px solid #edf2f7;
+        font-size: 15px;
+        color: #2d3748;
+        vertical-align: top;
+    }
+
+    .modern-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .modern-table td:first-child {
+        background-color: #f8fafc;
+        font-weight: 600;
+        width: 40%;
+        color: #1f4e78;
+        border-right: 4px solid #ffffff;
+        border-radius: 6px 0 0 6px;
+    }
+
+    /* Стилізація списків (Кафедри) */
+    .modern-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .modern-list li {
+        padding: 14px 0;
+        border-bottom: 1px dashed #e2e8f0;
+        color: #4a5568;
+        display: flex;
+        align-items: center;
+        font-size: 15px;
+    }
+
+    .modern-list li::before {
+        content: '•';
+        color: #3182ce;
+        font-size: 24px;
+        margin-right: 12px;
+        line-height: 1;
+    }
+
+    .modern-list li:last-child {
+        border-bottom: none;
+    }
+</style>
+
+<div class="dashboard-hero">
+    <h2>Механіко-математичний факультет</h2>
+    <p>Освітні програми факультету відповідають найвищим міжнародним стандартам. Про якість підготовки студентів красномовно свідчать результати їхніх виступів на міжнародних олімпіадах. Ця система створена для зручного управління навчальним процесом, розкладом та успішністю.</p>
+</div>
+
+<div class="knu-layout">
+    <div class="info-column">
+
+        <div class="info-section">
+            <h3>Освітні програми ОС Бакалавр</h3>
+            <table class="modern-table">
+                <tr>
+                    <td>А4 Середня освіта</td>
+                    <td>Математика (Денна)</td>
+                </tr>
+                <tr>
+                    <td>E7 Математика</td>
+                    <td>
+                        • Математика (Денна/Заочна)<br>
+                        • Математика інновацій (Денна)<br>
+                        • Математика штучного інтелекту (Денна)
+                    </td>
+                </tr>
+                <tr>
+                    <td>E8 Статистика</td>
+                    <td>Статистика (Денна)</td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+
+
+    <div class="info-column">
+        <div class="info-section">
+            <h3>Структура факультету (Кафедри)</h3>
+            <ul class="modern-list">
+                <li>Кафедра алгебри і комп’ютерної математики</li>
+                <li>Кафедра загальної математики</li>
+                <li>Кафедра інтегральних та диференціальних рівнянь</li>
+                <li>Кафедра комп'ютерної графіки і візуалізації</li>
+                <li>Кафедра комп’ютерних методів механіки і процесів керування</li>
+                <li>Кафедра математичного аналізу</li>
+                <li>Кафедра теоретичної та прикладної механіки</li>
+                <li>Кафедра теорії ймовірностей, статистики та актуарної математики</li>
+            </ul>
+        </div>
+    </div>
+</div>
 {% endblock %}
