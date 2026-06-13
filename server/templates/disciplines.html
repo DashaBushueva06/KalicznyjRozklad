@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Управління дисциплінами</h2>
+
+    <form class="add-form" action="/disciplines/add" method="POST" style="margin-bottom: 25px;">
+        <h3>Додати дисципліну</h3>
+        <label>Назва дисципліни:</label>
+        <input type="text" name="title" required>
+
+        <label>Викладач:</label>
+        <select name="teacher_id" required>
+            <option value="" disabled selected>Оберіть викладача</option>
+            {% for teacher in teachers %}
+            <option value="{{ teacher.id }}">{{ teacher.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Зберегти</button>
+    </form>
+
+    <h3>Список дисциплін</h3>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Назва дисципліни</th>
+            <th>Викладач</th>
+            <th>Дія</th>
+        </tr>
+        {% for discipline in disciplines %}
+        <tr>
+            <td>{{ discipline.id }}</td>
+            <td>{{ discipline.title }}</td>
+            <td>{{ discipline.teacher.name if discipline.teacher else 'Невідомо' }}</td>
+            <td>
+                <form action="/disciplines/{{ discipline.id }}/delete" method="POST" style="margin:0; padding:0; background:none; border:none; width:auto;">
+                    <button type="submit" style="color: red; background: none; border: none; cursor: pointer; text-decoration: underline; padding: 0;">Видалити</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

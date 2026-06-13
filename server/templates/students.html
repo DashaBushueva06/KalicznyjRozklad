@@ -1,37 +1,113 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>Список студентів</h2>
+    <h2>Управління студентами</h2>
 
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>ПІБ</th>
-            <th>Група</th>
-            <th>Дія</th>
-        </tr>
-        {% for student in students %}
-        <tr>
-            <td>{{ student.id }}</td>
-            <td>{{ student.name }}</td>
-            <td>{{ student.group_id }}</td>
-            <td>
-                <form action="/students/{{ student.id }}/delete" method="POST" style="margin:0; padding:0; border:none; width:auto;">
-                    <button type="submit">Видалити</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
+    <!-- ВЕРХНЯ ПАНЕЛЬ: ФОРМА ТА ФІЛЬТР -->
+    <div style="display: flex; gap: 20px; align-items: flex-start; margin-bottom: 25px;">
 
-    <h3>Додати студента</h3>
-    <form action="/students/add" method="POST">
-        <label>ПІБ:</label><br>
-        <input type="text" name="name" required><br><br>
+        <!-- Форма додавання (ліворуч) -->
+        <form class="add-form" action="/students/add" method="POST" style="margin-top: 0; flex: 1; max-width: 450px;">
+            <h3>Додати студента</h3>
 
-        <label>Група:</label><br>
-        <input type="text" name="group_id" required><br><br>
+            <label>ПІБ:</label>
+            <input type="text" name="name" required>
 
-        <button type="submit">Зберегти</button>
-    </form>
+            <label>Спеціальність:</label>
+            <select name="specialization" required>
+                <option value="" disabled selected>Оберіть спеціальність</option>
+                <option value="Математика">Математика</option>
+                <option value="Статистика">Статистика</option>
+                <option value="Математика ШІ">Математика ШІ</option>
+                <option value="Математика інновацій">Математика інновацій</option>
+                <option value="Середня освіта">Середня освіта</option>
+            </select>
+
+            <label>Курс:</label>
+            <select name="course" required>
+                <option value="" disabled selected>Оберіть курс</option>
+                <option value="1 курс бакалаврату">1 курс бакалаврату</option>
+                <option value="2 курс бакалаврату">2 курс бакалаврату</option>
+                <option value="3 курс бакалаврату">3 курс бакалаврату</option>
+                <option value="4 курс бакалаврату">4 курс бакалаврату</option>
+                <option value="1 курс магістратури">1 курс магістратури</option>
+                <option value="2 курс магістратури">2 курс магістратури</option>
+            </select>
+
+            <button type="submit">Зберегти</button>
+        </form>
+
+        <!-- Фільтр (праворуч) -->
+        <div class="filter-box" style="flex: 1; max-width: 400px;">
+            <h3>Фільтр студентів</h3>
+            <label>Спеціальність:</label>
+            <select id="filter_specialization" onchange="filterStudents()">
+                <option value="all">Усі спеціальності</option>
+                <option value="Математика">Математика</option>
+                <option value="Статистика">Статистика</option>
+                <option value="Математика ШІ">Математика ШІ</option>
+                <option value="Математика інновацій">Математика інновацій</option>
+                <option value="Середня освіта">Середня освіта</option>
+            </select>
+
+            <label>Курс:</label>
+            <select id="filter_course" onchange="filterStudents()">
+                <option value="all">Усі курси</option>
+                <option value="1 курс бакалаврату">1 курс бакалаврату</option>
+                <option value="2 курс бакалаврату">2 курс бакалаврату</option>
+                <option value="3 курс бакалаврату">3 курс бакалаврату</option>
+                <option value="4 курс бакалаврату">4 курс бакалаврату</option>
+                <option value="1 курс магістратури">1 курс магістратури</option>
+                <option value="2 курс магістратури">2 курс магістратури</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- ТАБЛИЦЯ СТУДЕНТІВ -->
+    <div class="table-container">
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>ПІБ</th>
+                <th>Спеціальність</th>
+                <th>Курс</th>
+                <th>Дія</th>
+            </tr>
+            {% for student in students %}
+            <tr class="student-row" data-specialization="{{ student.specialization }}" data-course="{{ student.course }}">
+                <td>{{ student.id }}</td>
+                <td>{{ student.name }}</td>
+                <td>{{ student.specialization }}</td>
+                <td>{{ student.course }}</td>
+                <td>
+                    <form action="/students/{{ student.id }}/delete" method="POST" style="margin:0; padding:0; border:none; width:auto;">
+                        <button type="submit" class="delete-btn">Видалити</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <script>
+    function filterStudents() {
+        let specFilter = document.getElementById("filter_specialization").value;
+        let courseFilter = document.getElementById("filter_course").value;
+        let rows = document.getElementsByClassName("student-row");
+
+        for (let row of rows) {
+            let rowSpec = row.getAttribute("data-specialization");
+            let rowCourse = row.getAttribute("data-course");
+
+            let matchSpec = (specFilter === "all" || rowSpec === specFilter);
+            let matchCourse = (courseFilter === "all" || rowCourse === courseFilter);
+
+            if (matchSpec && matchCourse) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        }
+    }
+    </script>
 {% endblock %}

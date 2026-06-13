@@ -85,7 +85,21 @@
             {% for classroom in classrooms %}
             <option value="{{ classroom.id }}">Ауд. {{ classroom.room_number }}</option>
             {% endfor %}
-        </select>
+        </table>
+    </div>
+
+    <script>
+    function filterSchedule() {
+        let specFilter = document.getElementById("filter_specialization").value;
+        let courseFilter = document.getElementById("filter_course").value;
+        let rows = document.getElementsByClassName("schedule-row");
+
+        for (let row of rows) {
+            let rowSpec = row.getAttribute("data-specialization");
+            let rowCourse = row.getAttribute("data-course");
+
+            let matchSpec = (specFilter === "all" || rowSpec === specFilter);
+            let matchCourse = (courseFilter === "all" || rowCourse === courseFilter);
 
         <button type="submit">Зберегти</button>
     </form>
