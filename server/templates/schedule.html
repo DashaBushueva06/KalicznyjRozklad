@@ -1,13 +1,12 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %}  {# Успадковую всю базову HTML-структуру з base.html #}
+{% block content %} {# Починаю заповнювати унікальний контент саме цієї сторінки #}
 
-{% block content %}
     <h2>Управління розкладом занять</h2>
 
-    <!-- ВЕРХНЯ ПАНЕЛЬ: ФОРМА ТА ФІЛЬТР -->
     <div style="display: flex; gap: 20px; align-items: flex-start; margin-bottom: 25px;">
 
-        <!-- Форма додавання (ліворуч) -->
-        <form class="add-form" action="/schedule/add" method="POST" style="margin-top: 0; flex: 1; max-width: 450px;">
+        {# Відкриваю HTML-форму для додавання нового розкладу #}
+        <form class="add-form" action="/schedule/add" method="POST">
             <h3>Додати до розкладу</h3>
 
             <label>День тижня:</label>
@@ -69,9 +68,9 @@
             <button type="submit">Зберегти</button>
         </form>
 
-        <!-- Фільтр розкладу (праворуч) -->
         <div class="filter-box" style="flex: 1; max-width: 400px;">
             <h3>Фільтр розкладу</h3>
+
             <label>Спеціальність:</label>
             <select id="filter_specialization" onchange="filterSchedule()">
                 <option value="all">Усі спеціальності</option>
@@ -86,16 +85,11 @@
             <select id="filter_course" onchange="filterSchedule()">
                 <option value="all">Усі курси</option>
                 <option value="1 курс бакалаврату">1 курс бакалаврату</option>
-                <option value="2 курс бакалаврату">2 курс бакалаврату</option>
-                <option value="3 курс бакалаврату">3 курс бакалаврату</option>
-                <option value="4 курс бакалаврату">4 курс бакалаврату</option>
-                <option value="1 курс магістратури">1 курс магістратури</option>
                 <option value="2 курс магістратури">2 курс магістратури</option>
             </select>
         </div>
     </div>
 
-    <!-- ТАБЛИЦЯ РОЗКЛАДУ -->
     <div class="table-container">
         <table id="schedule_table">
             <tr>
@@ -108,6 +102,7 @@
                 <th>Аудиторія</th>
                 <th>Дія</th>
             </tr>
+
             {% for entry in schedules %}
             <tr class="schedule-row" data-specialization="{{ entry.specialization }}" data-course="{{ entry.course }}">
                 <td>{{ entry.id }}</td>
@@ -117,6 +112,7 @@
                 <td>{{ entry.course }}</td>
                 <td>{{ entry.discipline.title if entry.discipline else 'Невідомо' }}</td>
                 <td>{{ entry.classroom.room_number if entry.classroom else 'Невідомо' }}</td>
+
                 <td>
                     <form action="/schedule/{{ entry.id }}/delete" method="POST" style="margin:0; padding:0; background:none; border:none; width:auto;">
                         <button type="submit" class="delete-btn">Видалити</button>
@@ -129,20 +125,30 @@
 
     <script>
     function filterSchedule() {
+        // Зчитуємо, що саме вибрав користувач у двох випадаючих списках фільтрів
         let specFilter = document.getElementById("filter_specialization").value;
         let courseFilter = document.getElementById("filter_course").value;
+
+        // Знаходимо всі рядки таблиці, які мають клас 'schedule-row'
         let rows = document.getElementsByClassName("schedule-row");
 
+        // Запускаємо цикл по кожному рядку таблиці
         for (let row of rows) {
+            // Витягуємо з рядка сховані дані через getAttribute
             let rowSpec = row.getAttribute("data-specialization");
             let rowCourse = row.getAttribute("data-course");
 
+            // Логіка перевірки (повертає true або false):
+            // Рядок підходить,коли фільтр вимкнено "all" або дані рядка збігаються з фільтром
             let matchSpec = (specFilter === "all" || rowSpec === specFilter);
             let matchCourse = (courseFilter === "all" || rowCourse === courseFilter);
 
+            // Якщо рядок пройшов ОБИДВІ перевірки (і по курсу, і по спеціальності)
             if (matchSpec && matchCourse) {
+                // Показуємо рядок (очищуємо inline-стиль display)
                 row.style.display = "";
             } else {
+                // Ховаємо рядок, якщо він не підходить під фільтри
                 row.style.display = "none";
             }
         }

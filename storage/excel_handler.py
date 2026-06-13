@@ -1,29 +1,21 @@
-"""
-Модуль для роботи з документами Excel за допомогою openpyxl.
-Забезпечує експорт актуального стану бази даних у файл init_data.xlsx
-із застосуванням класичного академічного форматування (Times New Roman).
-"""
-
 import os
 import zipfile
-from openpyxl import load_workbook, Workbook
-from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
-from openpyxl.utils import get_column_letter
+
+from openpyxl import load_workbook, Workbook # load_workbook-читання дійсних файлів, Workbook-для створення нових
+from openpyxl.styles import PatternFill, Font # PatternFill та Font потрібні для заливки фону клітинок, зміни кольору тексту
+from openpyxl.utils import get_column_letter # get_column_letter потрібен, щоб перетворювати числові індекси колонок (1, 2, 3) у літери Excel (A, B, C)
 from config.settings import EXCEL_PATH
-from storage.db_repository import repository
 
 
 class ExcelHandler:
-    """Клас для інкапсуляції логіки взаємодії з файловою системою та Excel."""
-
     def __init__(self, file_path: str):
         self.file_path = file_path
 
+    # _get_workbook: Відкриває дійсну книгу Excel або створює нову, якщо файл пошкоджено
     def _get_workbook(self) -> Workbook:
-        """Отримання об'єкта робочої книги. Створення нової у разі пошкодження або відсутності."""
         if not os.path.exists(self.file_path) or os.path.getsize(self.file_path) == 0:
-            wb = Workbook()
-            wb.save(self.file_path)
+            wb = Workbook() # Створюю чисту книгу
+            wb.save(self.file_path) # Зберігаю на диск
             return wb
 
         try:
@@ -33,136 +25,134 @@ class ExcelHandler:
             wb.save(self.file_path)
             return wb
 
-    def _export_sheet(self, wb: Workbook, sheet_name: str, headers: list, data: list) -> None:
-        """Формування окремого аркуша з попереднім видаленням старої версії та стилізацією."""
+
+    # _export_sheet: Створює аркуш, стилізує шапку та автоматично підбирає ширину колонок
+    @staticmethod # економить оперативну пам'ять
+    def _export_sheet(wb: Workbook, sheet_name: str, headers: list, data: list) -> None:
         if sheet_name in wb.sheetnames:
             std = wb[sheet_name]
-            wb.remove(std)
+            wb.remove(std)  # Очищення старого аркуша, якщо він вже існує
 
         ws = wb.create_sheet(sheet_name)
+        ws.append(headers) # Записую перший рядок із заголовками
 
-        # Вмикаємо відображення сітки (gridlines)
-        ws.views.sheetView[0].showGridLines = True
+        for row in data:
+            ws.append(row) # Проходжуся по масиву даних і дописую їх рядок за рядком
 
-        # СТИЛІЗАЦІЯ ЗА ТВОЇМИ ПАРАМЕТРАМИ
-        font_name = "Times New Roman"
+        # Фарбую шапку, вказую темно-синій колір
+        header_fill = PatternFill(start_color="1F4E78", end_color="1F4E78", fill_type="solid")
+        header_font = Font(color="FFFFFF", bold=True) #  Текст шапки білий та жирний
 
-        # Заголовки: 14 розмір, жирний, чорний колір тексту
-        header_font = Font(name=font_name, size=14, bold=True, color="000000")
-        # Легкий сірий фон для шапки, щоб вона відділялася від даних
-        header_fill = PatternFill(start_color="F2F2F2", end_color="F2F2F2", fill_type="solid")
+        for cell in ws[1]: # Проходжусь циклом по всіх клітинках першого рядка (ws[1] - шапка)
+            cell.fill = header_fill # Заливаю синім
+            cell.font = header_font # Застосовую білий жирний шрифт
 
-        # Звичайні клітинки: 12 розмір
-        data_font = Font(name=font_name, size=12)
+        # Розумний автопідбір ширини колонок під контент
+        for col in ws.columns: # Перебираю всі колонки на аркуші (A, B, C і так далі)
+            max_length = 0 # Змінна для збереження максимальної довжини тексту в колонці
+            column_letter = get_column_letter(col[0].column) # Витягую літеру поточної колонки
 
-        # Чорні класичні межі таблиці
-        black_border = Border(
-            left=Side(style='thin', color='000000'),
-            right=Side(style='thin', color='000000'),
-            top=Side(style='thin', color='000000'),
-            bottom=Side(style='thin', color='000000')
-        )
+            for cell in col: # Перебираю всі клітинки всередині поточної колонки (зверху вниз)
+                if cell.value: # Якщо клітинка не порожня
+                    cell_length = len(str(cell.value)) # Рахую довжину тексту в клітинці
+                    if cell_length > max_length: # Якщо знайдений текст довший за попередній максимум - оновлюю рекорд
+                        max_length = cell_length
 
-        # Вирівнювання
-        header_align = Alignment(horizontal="center", vertical="center", wrap_text=True)
-        data_align = Alignment(horizontal="left", vertical="center")
-        id_align = Alignment(horizontal="center", vertical="center")
+            # Встановлюю вирахувану ширину для всієї колонки
+            ws.column_dimensions[column_letter].width = max_length + 2
 
-        # 1. Записуємо заголовки
-        ws.append(headers)
-        ws.row_dimensions[1].height = 28
 
-        for cell in ws[1]:
-            cell.font = header_font
-            cell.fill = header_fill
-            cell.alignment = header_align
-            cell.border = black_border
+    # import_all_data: Зчитує дані з аркушів та імпортує їх у базу даних SQLite
+    def import_all_data(self) -> None:
+        from storage.db_repository import repository # Локальний імпорт для захисту від кільцевого імпорту
 
-        # 2. Записуємо дані
-        for row_idx, row_data in enumerate(data, start=2):
-            ws.append(row_data)
-            ws.row_dimensions[row_idx].height = 22
+        if not os.path.exists(self.file_path):
+            print(f"[ERROR] Initialization file {self.file_path} not found.")
+            return
+        print(f"[INFO] Synchronizing current data from Excel file: {self.file_path}")
 
-            for col_idx, cell in enumerate(ws[row_idx], start=1):
-                cell.font = data_font
-                cell.border = black_border
+        wb = load_workbook(self.file_path, data_only=True)  # Зчитую файл. data_only=True каже брати самі значення, а не формули
 
-                if col_idx == 1:
-                    cell.alignment = id_align
-                else:
-                    cell.alignment = data_align
+        data_to_import = {  # Словник-контейнер для пакетного відправлення в БД
+            'teachers': [], 'classrooms': [], 'students': [],
+            'disciplines': [], 'grades': [], 'schedules': []
+        }
 
-        # 3. Автоматичне вирівнювання ширини стовпчиків
-        for col in ws.columns:
-            max_len = 0
-            col_letter = get_column_letter(col[0].column)
+        mapping = { # Мапа зв'язків, де ключ - назва аркуша, а значення - кортеж
+            "Викладачі": ('teachers', ['id', 'name', 'department']),
+            "Аудиторії": ('classrooms', ['id', 'room_number', 'capacity']),
+            "Студенти": ('students', ['id', 'name', 'specialization', 'course']),
+            "Дисципліни": ('disciplines', ['id', 'title', 'teacher_name']),
+            "Оцінки": ('grades', ['id', 'student_name', 'discipline_title', 'value'])
+        }
 
-            for cell in col:
-                if cell.value is not None:
-                    max_len = max(max_len, len(str(cell.value)))
+        for sheet_name, (db_key, fields) in mapping.items(): # 1 цикл для 5 стандартних аркушів
+            if sheet_name in wb.sheetnames:
+                ws = wb[sheet_name]
+                for row in ws.iter_rows(min_row=2, values_only=True):  # Іду по всіх рядках, пропускаючи шапку
+                    if row and row[0] is not None:  # Захист від порожніх рядків
+                        # Функція zip об'єднує назви полів [id, name...] з даними рядка у готовий словник
+                        data_to_import[db_key].append(dict(zip(fields, row)))
 
-            ws.column_dimensions[col_letter].width = max(max_len + 5, 14)
+        # 2. Окремо аркуш Розклад, бо у нього складна логіка з дефолтними значеннями
+        if "Розклад" in wb.sheetnames:
+            ws = wb["Розклад"]
+            for row in ws.iter_rows(min_row=2, values_only=True):
+                if row and row[0] is not None:
+                    data_to_import['schedules'].append({  # Пакую складний об'єкт розкладу з перевірками довжини
+                        'id': int(row[0]), 'day_of_week': str(row[1]), 'time_slot': str(row[2]),
+                        'discipline_title': str(row[3]), 'room_number': str(row[4]),
+                        'specialization': str(row[5]) if len(row) > 5 and row[5] else "Загальна",
+                        'course': str(row[6]) if len(row) > 6 and row[6] else "1"
+                    })
 
+        try:
+            repository.upload_initial_data(data_to_import) # Завантажую всі зібрані дані в базу даних
+            print("[SUCCESS] Excel -> DB synchronization completed successfully.")
+        except Exception as e:
+            print(f"[CRITICAL] Batch save error occurred: {e}")
+
+
+    # sync_all_data: Вивантажує поточний стан усіх таблиць бази даних назад у файл Excel
     def sync_all_data(self) -> None:
-        """Вивантаження поточного стану всіх таблиць бази даних у файл Excel."""
+        from storage.db_repository import repository
         wb = self._get_workbook()
 
-        # 1. Студенти
-        students = repository.students.get_all()
-        self._export_sheet(wb, "Студенти", ["ID", "ПІБ", "Спеціальність", "Курс"],
-                           [[s.id, s.name, s.specialization, s.course] for s in students])
+        export_mapping = [
+            ("Студенти", ["ID", "ПІБ", "Спеціальність", "Курс"],
+             repository.students.get_all(), lambda s: [s.id, s.name, s.specialization, s.course]),
+            ("Викладачі", ["ID", "ПІБ", "Кафедра"],
+             repository.teachers.get_all(), lambda t: [t.id, t.name, t.department]),
+            ("Дисципліни", ["ID", "Назва дисципліни", "Викладач"],
+             repository.get_disciplines_with_details(),
+             lambda d: [d.id, d.title, d.teacher.name if d.teacher else "Невідомо"]),
+            ("Аудиторії", ["ID", "Номер аудиторії", "Місткість"],
+             repository.classrooms.get_all(), lambda r: [r.id, r.room_number, r.capacity])
+        ]
 
-        # 2. Викладачі
-        teachers = repository.teachers.get_all()
-        self._export_sheet(wb, "Викладачі", ["ID", "ПІБ", "Кафедра"],
-                           [[t.id, t.name, t.department] for t in teachers])
+        for sheet_name, headers, fetch_method, transform_func in export_mapping: # 1 цикл для експорту базових таблиць
+            # Викликаю метод експорту без self
+            self._export_sheet(wb, sheet_name, headers, [transform_func(obj) for obj in fetch_method])
 
-        # 3. Дисципліни
-        disciplines = repository.get_disciplines_with_details()
-        self._export_sheet(wb, "Дисципліни", ["ID", "Назва дисципліни", "Викладач"],
-                           [[d.id, d.title, d.teacher.name if d.teacher else "Невідомо"] for d in disciplines])
-
-        # 4. Аудиторії
-        classrooms = repository.classrooms.get_all()
-        self._export_sheet(wb, "Аудиторії", ["ID", "Номер аудиторії", "Місткість"],
-                           [[r.id, r.room_number, r.capacity] for r in classrooms])
-
-        # 5. Оцінки
-        grades = repository.get_grades_with_details()
+        # Окремо аркуш Оцінки, бо там довга логіка трансформації рядка
+        grades = repository.get_grades_with_details()  # Завантажую оцінки з бази
         self._export_sheet(wb, "Оцінки", ["ID", "Студент", "Дисципліна", "Оцінка"],
                            [[g.id, g.student.name if g.student else "Невідомо",
                              g.discipline.title if g.discipline else "Невідомо", g.value] for g in grades])
 
-        # 6. Розклад із хронологічним та академічним сортуванням
+        # Окремо аркуш Розклад, через кастомне форматування назви аудиторії
         schedules = repository.get_full_schedule()
-
-        days_order = {"Понеділок": 1, "Вівторок": 2, "Середа": 3, "Четвер": 4, "П'ятниця": 5}
-        time_order = {"08:40 - 10:15": 1, "10:35 - 12:10": 2, "12:20 - 13:55": 3, "14:05 - 15:35": 4}
-
-        def schedule_sort_key(s):
-            return (
-                s.course or "",
-                s.specialization or "",
-                days_order.get(s.day_of_week, 6),
-                time_order.get(s.time_slot, 5)
-            )
-
-        sorted_schedules = sorted(schedules, key=schedule_sort_key)
-
-        self._export_sheet(wb, "Розклад", ["ID", "День тижня", "Час", "Спеціальність", "Курс", "Дисципліна", "Аудиторія"],
-                           [[s.id, s.day_of_week, s.time_slot, s.specialization, s.course,
+        self._export_sheet(wb, "Розклад",
+                           ["ID", "День тижня", "Час", "Дисципліна", "Аудиторія", "Спеціальність", "Курс"],
+                           [[s.id, s.day_of_week, s.time_slot,
                              s.discipline.title if s.discipline else "Невідомо",
-                             f"Ауд. {s.classroom.room_number}" if s.classroom else "Невідомо"]
-                            for s in sorted_schedules])
-
-        if "Курси" in wb.sheetnames:
-            wb.remove(wb["Курси"])
+                             f"Ауд. {s.classroom.room_number}" if s.classroom else "Невідомо",
+                             s.specialization, s.course]
+                            for s in schedules])
 
         if "Sheet" in wb.sheetnames and len(wb.sheetnames) > 1:
-            wb.remove(wb["Sheet"])
+            wb.remove(wb["Sheet"]) # Прибираю стандартний порожній аркуш Excel
 
         wb.save(self.file_path)
 
-
-# ОЦЕЙ ОБОВ'ЯЗКОВИЙ РЯДОК МАЄ БУТИ НА САМОМУ ПРИКІНЦІ ФАЙЛУ:
 excel_handler = ExcelHandler(EXCEL_PATH)

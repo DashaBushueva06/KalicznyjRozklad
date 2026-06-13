@@ -1,12 +1,10 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %}  {# Успадковую всю базову HTML-структуру з base.html #}
+{% block content %} {# Починаю заповнювати унікальний контент саме цієї сторінки #}
     <h2>Управління студентами</h2>
 
-    <!-- ВЕРХНЯ ПАНЕЛЬ: ФОРМА ТА ФІЛЬТР -->
     <div style="display: flex; gap: 20px; align-items: flex-start; margin-bottom: 25px;">
 
-        <!-- Форма додавання (ліворуч) -->
+        {# Відкриваю HTML-форму для додавання нових студентів #}
         <form class="add-form" action="/students/add" method="POST" style="margin-top: 0; flex: 1; max-width: 450px;">
             <h3>Додати студента</h3>
 
@@ -37,9 +35,9 @@
             <button type="submit">Зберегти</button>
         </form>
 
-        <!-- Фільтр (праворуч) -->
         <div class="filter-box" style="flex: 1; max-width: 400px;">
             <h3>Фільтр студентів</h3>
+
             <label>Спеціальність:</label>
             <select id="filter_specialization" onchange="filterStudents()">
                 <option value="all">Усі спеціальності</option>
@@ -63,7 +61,6 @@
         </div>
     </div>
 
-    <!-- ТАБЛИЦЯ СТУДЕНТІВ -->
     <div class="table-container">
         <table>
             <tr>
@@ -73,12 +70,14 @@
                 <th>Курс</th>
                 <th>Дія</th>
             </tr>
-            {% for student in students %}
+
+            {% for student in students %} {# Запускаємо цикл по масиву всіх студентів, переданих з сервера #}
             <tr class="student-row" data-specialization="{{ student.specialization }}" data-course="{{ student.course }}">
                 <td>{{ student.id }}</td>
                 <td>{{ student.name }}</td>
                 <td>{{ student.specialization }}</td>
                 <td>{{ student.course }}</td>
+
                 <td>
                     <form action="/students/{{ student.id }}/delete" method="POST" style="margin:0; padding:0; border:none; width:auto;">
                         <button type="submit" class="delete-btn">Видалити</button>
@@ -91,17 +90,24 @@
 
     <script>
     function filterStudents() {
+        // Отримуємо поточні значення з селектів фільтру
         let specFilter = document.getElementById("filter_specialization").value;
         let courseFilter = document.getElementById("filter_course").value;
+
+        // Збираємо всі рядки студентів у таблиці
         let rows = document.getElementsByClassName("student-row");
 
+        // Перевіряємо кожен рядок
         for (let row of rows) {
+            // Зчитуємо сховані data-атрибути
             let rowSpec = row.getAttribute("data-specialization");
             let rowCourse = row.getAttribute("data-course");
 
+            // Перевіряємо збіги (якщо вибрано "all", фільтр вважається пройденим)
             let matchSpec = (specFilter === "all" || rowSpec === specFilter);
             let matchCourse = (courseFilter === "all" || rowCourse === courseFilter);
 
+            // Якщо рядок відповідає обом критеріям, показуємо його, інакше — ховаємо
             if (matchSpec && matchCourse) {
                 row.style.display = "";
             } else {
