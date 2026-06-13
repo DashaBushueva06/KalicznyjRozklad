@@ -1,20 +1,24 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %}  {# Успадковую всю базову HTML-структуру з base.html #}
+{% block content %} {# Починаю заповнювати унікальний контент саме цієї сторінки #}
 
-{% block content %}
     <h2>Управління дисциплінами</h2>
 
+    {# Відкриваю HTML-форму для додавання нових дисциплін #}
     <form class="add-form" action="/disciplines/add" method="POST" style="margin-bottom: 25px;">
         <h3>Додати дисципліну</h3>
+
         <label>Назва дисципліни:</label>
         <input type="text" name="title" required>
 
         <label>Викладач:</label>
         <select name="teacher_id" required>
             <option value="" disabled selected>Оберіть викладача</option>
+
             {% for teacher in teachers %}
             <option value="{{ teacher.id }}">{{ teacher.name }}</option>
-            {% endfor %}
+            {% endfor %} {# Закриваємо цикл генерації опцій #}
         </select>
+
         <button type="submit">Зберегти</button>
     </form>
 
@@ -26,11 +30,13 @@
             <th>Викладач</th>
             <th>Дія</th>
         </tr>
-        {% for discipline in disciplines %}
+
+        {% for discipline in disciplines %} {# Запускаємо цикл для формування рядків таблиці #}
         <tr>
             <td>{{ discipline.id }}</td>
             <td>{{ discipline.title }}</td>
             <td>{{ discipline.teacher.name if discipline.teacher else 'Невідомо' }}</td>
+
             <td>
                 <form action="/disciplines/{{ discipline.id }}/delete" method="POST" style="margin:0; padding:0; background:none; border:none; width:auto;">
                     <button type="submit" style="color: red; background: none; border: none; cursor: pointer; text-decoration: underline; padding: 0;">Видалити</button>

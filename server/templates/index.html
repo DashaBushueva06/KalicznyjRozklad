@@ -1,54 +1,44 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %}  {# Успадковую всю базову HTML-структуру з base.html #}
+{% block content %} {# Починаю заповнювати унікальний контент саме цієї сторінки #}
 
-{% block content %}
 <style>
-    /* Базові стилі контейнера */
     .dashboard-hero {
         background: linear-gradient(135deg, #1f4e78 0%, #2c6ca6 100%);
+        padding: 40px; /* Просторі внутрішні відступи */
+        border-radius: 12px; /* М'які кути */
+        box-shadow: 0 4px 15px rgba(31, 78, 120, 0.15); /* Тінь в тон фону */
+        margin-bottom: 30px; /* Відступ до наступних блоків */
         color: #ffffff;
-        padding: 40px;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(31, 78, 120, 0.15);
-        margin-bottom: 30px;
     }
 
-    .dashboard-hero h2 {
+    .dashboard-hero h2 { /* Скидання базових стилів для заголовка всередині банера */
         color: #ffffff;
-        border-bottom: none;
+        border-bottom: none; /* Прибираємо лінію, яка была в загальних стилях h2 */
         margin-top: 0;
         margin-bottom: 15px;
-        font-size: 30px;
+        font-size: 30px; /* Робимо заголовок масивним */
     }
 
-    .dashboard-hero p {
+    .dashboard-hero p { /* Стилізація опису факультету */
         font-size: 16px;
-        line-height: 1.7;
+        line-height: 1.7; /* Збільшений міжрядковий升 інтервал для легкості читання великого тексту */
         margin: 0;
-        opacity: 0.95;
-        max-width: 900px;
+        opacity: 0.95; /* Робимо текст ледь-ледь прозорим, щоб він не "кричав" так само, як заголовок */
     }
 
-    /* Симетрична сітка для збалансованого контенту */
-    .knu-layout {
-        display: grid;
-        grid-template-columns: 1fr 1fr; /* Дві однакові колонки */
-        gap: 30px;
+    .knu-layout { /* Сітка розташування контенту */
+        display: grid; /* Вмикаємо технологію сіток CSS Grid */
+        grid-template-columns: 1fr 1fr;   /* 1fr 1fr означає: поділи вільний простір на 2 рівні фракції (колонки по 50%) */
+        gap: 30px; /* Відстань між колонками рівно 30 пікселів */
     }
 
-    /* Адаптивність для менших екранів */
-    @media (max-width: 900px) {
-        .knu-layout {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    .info-section {
-        background: #ffffff;
+    .info-section { /* Картки з розташуванням інфи */
+        background: #ffffff; /* Біла підкладка */
         padding: 30px;
         border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* Легка тінь */
         margin-bottom: 30px;
-        height: max-content;
+        height: max-content; /* Картка тягнеться рівно настільки, скільки в ній тексту */
     }
 
     .info-section h3 {
@@ -56,14 +46,13 @@
         font-size: 22px;
         margin-top: 0;
         margin-bottom: 20px;
-        border-bottom: 2px solid #f1f5f9;
+        border-bottom: 2px solid #f1f5f9; /* Лінія-розділювач під заголовком */
         padding-bottom: 10px;
     }
 
-    /* Сучасна адаптація "blueTable" */
-    .modern-table {
+    .modern-table { /* Стилізація таблиці освітніх програм */
         width: 100%;
-        border-collapse: collapse;
+        border-collapse: collapse; /* Злиття рамок */
     }
 
     .modern-table td {
@@ -71,48 +60,61 @@
         border-bottom: 1px solid #edf2f7;
         font-size: 15px;
         color: #2d3748;
-        vertical-align: top;
+        vertical-align: top; /* Текст завжди притискається до верху комірки (корисно для багаторядкового тексту) */
     }
 
-    .modern-table tr:last-child td {
-        border-bottom: none;
+    .modern-table tr:last-child td { /* Прибираємо ефект подвійної рамки */
+        border-bottom: none; /* Прибираю сіру лінію в самому кінці, щоб вона не псувала закруглений низ білої картки */
     }
 
-    .modern-table td:first-child {
-        background-color: #f8fafc;
-        font-weight: 600;
-        width: 40%;
+    .modern-table td:first-child { /*  стилізуємо тільки першу колонку  */
+        background-color: #f8fafc; /* сірий фон для колонки кодів */
+        font-weight: 600; /* робимо жирним */
+        width: 35%; /* фіксуємо десктопну ширину лівої колонки */
         color: #1f4e78;
-        border-right: 4px solid #ffffff;
-        border-radius: 6px 0 0 6px;
+        border-right: 4px solid #ffffff; /* створюємо візуальний розрив між першою і другою колонкою */
+        border-radius: 6px 0 0 6px; /* закруглюємо тільки ліві кути фону */
     }
 
-    /* Стилізація списків (Кафедри) */
+    .table-sublist {
+        margin: 0; /* прибираємо зовнішні зазори */
+        padding-left: 15px; /* створюємо акуратний відступ під крапки */
+        list-style-type: disc; /* вмикаємо стандартні десктопні круглі маркери списку */
+        color: #4a5568; /* графітовий колір для тексту всередині таблиці */
+    }
+
+    .table-sublist li {
+        margin-bottom: 4px; /* зазор між пунктами підпрограм */
+    }
+    .table-sublist li:last-child {
+        margin-bottom: 0; /* останньому пункту відступ знизу не потрібен */
+    }
+
     .modern-list {
-        list-style: none;
+        list-style: none; /* вимикаємо стандартні чорні крапки браузера */
         padding: 0;
         margin: 0;
     }
 
     .modern-list li {
         padding: 14px 0;
-        border-bottom: 1px dashed #e2e8f0;
+        border-bottom: 1px dashed #e2e8f0; /* пунктирна лінія між кафедрами */
         color: #4a5568;
-        display: flex;
-        align-items: center;
+        display: flex; /* робимо кожен пункт flex-контейнером */
+        align-items: center; /* центруємо текст і крапку по вертикалі */
         font-size: 15px;
     }
 
-    .modern-list li::before {
-        content: '•';
-        color: #3182ce;
-        font-size: 24px;
-        margin-right: 12px;
-        line-height: 1;
+    .modern-list li::before { /* створюємо власні ідеальні сині крапки через псевдоелемент */
+        content: '•'; /* сам символ крапки */
+        color: #1f4e78; /* фарбуємо крапку в наш єдиний синій десктопний колір */
+        font-size: 24px; /* робимо крапку великою */
+        margin-right: 12px; /* відступ від крапки до тексту кафедри */
+        line-height: 1; /* виправляємо зміщення висоти через великий розмір шрифту */
     }
 
     .modern-list li:last-child {
-        border-bottom: none;
+        border-bottom: none; /* останньому пункту лінія знизу не потрібна */
     }
 </style>
 
@@ -122,47 +124,43 @@
 </div>
 
 <div class="knu-layout">
-    <div class="info-column">
 
-        <div class="info-section">
-            <h3>Освітні програми ОС Бакалавр</h3>
-            <table class="modern-table">
-                <tr>
-                    <td>А4 Середня освіта</td>
-                    <td>Математика (Денна)</td>
-                </tr>
-                <tr>
-                    <td>E7 Математика</td>
-                    <td>
-                        • Математика (Денна/Заочна)<br>
-                        • Математика інновацій (Денна)<br>
-                        • Математика штучного інтелекту (Денна)
-                    </td>
-                </tr>
-                <tr>
-                    <td>E8 Статистика</td>
-                    <td>Статистика (Денна)</td>
-                </tr>
-            </table>
-        </div>
-
+    <div class="info-section">
+        <h3>Освітні програми ОС Бакалавр</h3>
+        <table class="modern-table">
+            <tr>
+                <td>A4 Середня освіта</td>
+                <td>Математика (Денна)</td>
+            </tr>
+            <tr>
+                <td>E7 Математика</td>
+                <td>
+                    <ul class="table-sublist"> <li>Математика (Денна/Заочна)</li>
+                        <li>Математика інновацій (Денна)</li>
+                        <li>Математика штучного інтелекту (Денна)</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>E8 Статистика</td>
+                <td>Статистика (Денна)</td>
+            </tr>
+        </table>
     </div>
 
-
-    <div class="info-column">
-        <div class="info-section">
-            <h3>Структура факультету (Кафедри)</h3>
-            <ul class="modern-list">
-                <li>Кафедра алгебри і комп’ютерної математики</li>
-                <li>Кафедра загальної математики</li>
-                <li>Кафедра інтегральних та диференціальних рівнянь</li>
-                <li>Кафедра комп'ютерної графіки і візуалізації</li>
-                <li>Кафедра комп’ютерних методів механіки і процесів керування</li>
-                <li>Кафедра математичного аналізу</li>
-                <li>Кафедра теоретичної та прикладної механіки</li>
-                <li>Кафедра теорії ймовірностей, статистики та актуарної математики</li>
-            </ul>
-        </div>
+    <div class="info-section">
+        <h3>Структура факультету (Кафедри)</h3>
+        <ul class="modern-list">
+            <li>Кафедра алгебри і комп’ютерної математики</li>
+            <li>Кафедра загальної математики</li>
+            <li>Кафедра інтегральних та диференціальних рівнянь</li>
+            <li>Кафедра комп'ютерної графіки і візуалізації</li>
+            <li>Кафедра комп’ютерних методів механіки і процесів керування</li>
+            <li>Кафедра математичного аналізу</li>
+            <li>Кафедра теоретичної та прикладної механіки</li>
+            <li>Кафедра теорії ймовірностей, статистики та актуарної математики</li>
+        </ul>
     </div>
+
 </div>
 {% endblock %}

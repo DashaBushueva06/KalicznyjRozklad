@@ -1,14 +1,17 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %}  {# Успадковую всю базову HTML-структуру з base.html #}
+{% block content %} {# Починаю заповнювати унікальний контент саме цієї сторінки #}
 
-{% block content %}
     <h2>Управління оцінками студентів</h2>
 
+    {# Відкриваю HTML-форму для додавання нових оцінок #}
     <form class="add-form" action="/grades/add" method="POST" style="margin-bottom: 25px;">
         <h3>Додати оцінку</h3>
+
         <label>Студент:</label>
         <select name="student_id" required>
             <option value="" disabled selected>Оберіть студента</option>
-            {% for student in students %}
+
+            {% for student in students %} {# Проходимося циклом по списку студентів, який прийшов з бекенду #}
             <option value="{{ student.id }}">{{ student.name }} ({{ student.course }})</option>
             {% endfor %}
         </select>
@@ -16,7 +19,8 @@
         <label>Дисципліна:</label>
         <select name="discipline_id" required>
             <option value="" disabled selected>Оберіть дисципліну</option>
-            {% for discipline in disciplines %}
+
+            {% for discipline in disciplines %} {# Аналогічний цикл для дисциплін #}
             <option value="{{ discipline.id }}">{{ discipline.title }}</option>
             {% endfor %}
         </select>
@@ -36,7 +40,8 @@
             <th>Оцінка</th>
             <th>Дія</th>
         </tr>
-        {% for grade in grades %}
+
+        {% for grade in grades %} {# Запускаємо цикл по масиву всіх оцінок (grades) #}
         <tr>
             <td>{{ grade.id }}</td>
             <td>{{ grade.student.name if grade.student else 'Невідомо' }}</td>
@@ -50,28 +55,4 @@
         </tr>
         {% endfor %}
     </table>
-
-    <form class="add-form" action="/grades/add" method="POST">
-        <h3>Додати оцінку</h3>
-        <label>Студент:</label>
-        <select name="student_id" required>
-            <option value="" disabled selected>Оберіть студента</option>
-            {% for student in students %}
-            <option value="{{ student.id }}">{{ student.name }} ({{ student.course }})</option>
-            {% endfor %}
-        </select>
-
-        <label>Дисципліна:</label>
-        <select name="discipline_id" required>
-            <option value="" disabled selected>Оберіть дисципліну</option>
-            {% for discipline in disciplines %}
-            <option value="{{ discipline.id }}">{{ discipline.title }}</option>
-            {% endfor %}
-        </select>
-
-        <label>Оцінка (60-100):</label>
-        <input type="number" name="value" min="60" max="100" required>
-
-        <button type="submit">Зберегти</button>
-    </form>
 {% endblock %}

@@ -1,106 +1,157 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %}  {# Успадковую всю базову HTML-структуру з base.html #}
+{% block content %} {# Починаю заповнювати унікальний контент саме цієї сторінки #}
 
-{% block content %}
-    <h2>Розклад занять</h2>
+    <h2>Управління розкладом занять</h2>
 
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>День тижня</th>
-            <th>Час</th>
-            <th>Дисципліна</th>
-            <th>Аудиторія</th>
-            <th>Дія</th>
-        </tr>
-        {% for entry in schedules %}
-        <tr>
-            <td>{{ entry.id }}</td>
-            <td>{{ entry.day_of_week }}</td>
-            <td>{{ entry.time_slot }}</td>
-            <td>{{ entry.discipline.title if entry.discipline else 'Невідомо' }}</td>
-            <td>{{ entry.classroom.room_number if entry.classroom else 'Невідомо' }}</td>
-            <td>
-                <form action="/schedule/{{ entry.id }}/delete" method="POST" style="margin:0; padding:0; background:none; border:none; width:auto;">
-                    <button type="submit" style="color: red; background: none; border: none; cursor: pointer; text-decoration: underline; padding: 0;">Видалити</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
+    <div style="display: flex; gap: 20px; align-items: flex-start; margin-bottom: 25px;">
 
-    <form class="add-form" action="/schedule/add" method="POST">
-        <h3>Додати до розкладу</h3>
+        {# Відкриваю HTML-форму для додавання нового розкладу #}
+        <form class="add-form" action="/schedule/add" method="POST">
+            <h3>Додати до розкладу</h3>
 
-        <label>День тижня:</label>
-        <select name="day_of_week" required>
-            <option value="" disabled selected>Оберіть день</option>
-            <option value="Понеділок">Понеділок</option>
-            <option value="Вівторок">Вівторок</option>
-            <option value="Середа">Середа</option>
-            <option value="Четвер">Четвер</option>
-            <option value="П'ятниця">П'ятниця</option>
-        </select>
+            <label>День тижня:</label>
+            <select name="day_of_week" required>
+                <option value="" disabled selected>Оберіть день</option>
+                <option value="Понеділок">Понеділок</option>
+                <option value="Вівторок">Вівторок</option>
+                <option value="Середа">Середа</option>
+                <option value="Четвер">Четвер</option>
+                <option value="П'ятниця">П'ятниця</option>
+            </select>
 
-        <label>Часовий слот:</label>
-        <select name="time_slot" required>
-            <option value="" disabled selected>Оберіть час</option>
-            <option value="08:40 - 10:15">08:40 - 10:15</option>
-            <option value="10:35 - 12:10">10:35 - 12:10</option>
-            <option value="12:20 - 13:55">12:20 - 13:55</option>
-            <option value="14:05 - 15:35">14:05 - 15:35</option>
-        </select>
+            <label>Часовий слот:</label>
+            <select name="time_slot" required>
+                <option value="" disabled selected>Оберіть час</option>
+                <option value="08:40 - 10:15">08:40 - 10:15</option>
+                <option value="10:35 - 12:10">10:35 - 12:10</option>
+                <option value="12:20 - 13:55">12:20 - 13:55</option>
+                <option value="14:05 - 15:35">14:05 - 15:35</option>
+            </select>
 
-        <label>Спеціальність:</label>
-        <select name="specialization" required>
-            <option value="" disabled selected>Оберіть спеціальність</option>
-            <option value="Математика">Математика</option>
-            <option value="Статистика">Статистика</option>
-            <option value="Математика ШІ">Математика ШІ</option>
-            <option value="Математика інновацій">Математика інновацій</option>
-            <option value="Середня освіта">Середня освіта</option>
-        </select>
+            <label>Спеціальність:</label>
+            <select name="specialization" required>
+                <option value="" disabled selected>Оберіть спеціальність</option>
+                <option value="Математика">Математика</option>
+                <option value="Статистика">Статистика</option>
+                <option value="Математика ШІ">Математика ШІ</option>
+                <option value="Математика інновацій">Математика інновацій</option>
+                <option value="Середня освіта">Середня освіта</option>
+            </select>
 
-        <label>Курс:</label>
-        <select name="course" required>
-            <option value="" disabled selected>Оберіть курс</option>
-            <option value="1 курс бакалаврату">1 курс бакалаврату</option>
-            <option value="2 курс бакалаврату">2 курс бакалаврату</option>
-            <option value="3 курс бакалаврату">3 курс бакалаврату</option>
-            <option value="4 курс бакалаврату">4 курс бакалаврату</option>
-            <option value="1 курс магістратури">1 курс магістратури</option>
-            <option value="2 курс магістратури">2 курс магістратури</option>
-        </select>
+            <label>Курс:</label>
+            <select name="course" required>
+                <option value="" disabled selected>Оберіть курс</option>
+                <option value="1 курс бакалаврату">1 курс бакалаврату</option>
+                <option value="2 курс бакалаврату">2 курс бакалаврату</option>
+                <option value="3 курс бакалаврату">3 курс бакалаврату</option>
+                <option value="4 курс бакалаврату">4 курс бакалаврату</option>
+                <option value="1 курс магістратури">1 курс магістратури</option>
+                <option value="2 курс магістратури">2 курс магістратури</option>
+            </select>
 
-        <label>Дисципліна:</label>
-        <select name="discipline_id" required>
-            <option value="" disabled selected>Оберіть дисципліну</option>
-            {% for discipline in disciplines %}
-            <option value="{{ discipline.id }}">{{ discipline.title }}</option>
-            {% endfor %}
-        </select>
+            <label>Дисципліна:</label>
+            <select name="discipline_id" required>
+                <option value="" disabled selected>Оберіть дисципліну</option>
+                {% for discipline in disciplines %}
+                <option value="{{ discipline.id }}">{{ discipline.title }}</option>
+                {% endfor %}
+            </select>
 
-        <label>Аудиторія:</label>
-        <select name="classroom_id" required>
-            <option value="" disabled selected>Оберіть аудиторію</option>
-            {% for classroom in classrooms %}
-            <option value="{{ classroom.id }}">Ауд. {{ classroom.room_number }}</option>
+            <label>Аудиторія:</label>
+            <select name="classroom_id" required>
+                <option value="" disabled selected>Оберіть аудиторію</option>
+                {% for classroom in classrooms %}
+                <option value="{{ classroom.id }}">Ауд. {{ classroom.room_number }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit">Зберегти</button>
+        </form>
+
+        <div class="filter-box" style="flex: 1; max-width: 400px;">
+            <h3>Фільтр розкладу</h3>
+
+            <label>Спеціальність:</label>
+            <select id="filter_specialization" onchange="filterSchedule()">
+                <option value="all">Усі спеціальності</option>
+                <option value="Математика">Математика</option>
+                <option value="Статистика">Статистика</option>
+                <option value="Математика ШІ">Математика ШІ</option>
+                <option value="Математика інновацій">Математика інновацій</option>
+                <option value="Середня освіта">Середня освіта</option>
+            </select>
+
+            <label>Курс:</label>
+            <select id="filter_course" onchange="filterSchedule()">
+                <option value="all">Усі курси</option>
+                <option value="1 курс бакалаврату">1 курс бакалаврату</option>
+                <option value="2 курс магістратури">2 курс магістратури</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table id="schedule_table">
+            <tr>
+                <th>ID</th>
+                <th>День тижня</th>
+                <th>Час</th>
+                <th>Спеціальність</th>
+                <th>Курс</th>
+                <th>Дисципліна</th>
+                <th>Аудиторія</th>
+                <th>Дія</th>
+            </tr>
+
+            {% for entry in schedules %}
+            <tr class="schedule-row" data-specialization="{{ entry.specialization }}" data-course="{{ entry.course }}">
+                <td>{{ entry.id }}</td>
+                <td>{{ entry.day_of_week }}</td>
+                <td>{{ entry.time_slot }}</td>
+                <td>{{ entry.specialization }}</td>
+                <td>{{ entry.course }}</td>
+                <td>{{ entry.discipline.title if entry.discipline else 'Невідомо' }}</td>
+                <td>{{ entry.classroom.room_number if entry.classroom else 'Невідомо' }}</td>
+
+                <td>
+                    <form action="/schedule/{{ entry.id }}/delete" method="POST" style="margin:0; padding:0; background:none; border:none; width:auto;">
+                        <button type="submit" class="delete-btn">Видалити</button>
+                    </form>
+                </td>
+            </tr>
             {% endfor %}
         </table>
     </div>
 
     <script>
     function filterSchedule() {
+        // Зчитуємо, що саме вибрав користувач у двох випадаючих списках фільтрів
         let specFilter = document.getElementById("filter_specialization").value;
         let courseFilter = document.getElementById("filter_course").value;
+
+        // Знаходимо всі рядки таблиці, які мають клас 'schedule-row'
         let rows = document.getElementsByClassName("schedule-row");
 
+        // Запускаємо цикл по кожному рядку таблиці
         for (let row of rows) {
+            // Витягуємо з рядка сховані дані через getAttribute
             let rowSpec = row.getAttribute("data-specialization");
             let rowCourse = row.getAttribute("data-course");
 
+            // Логіка перевірки (повертає true або false):
+            // Рядок підходить,коли фільтр вимкнено "all" або дані рядка збігаються з фільтром
             let matchSpec = (specFilter === "all" || rowSpec === specFilter);
             let matchCourse = (courseFilter === "all" || rowCourse === courseFilter);
 
-        <button type="submit">Зберегти</button>
-    </form>
+            // Якщо рядок пройшов ОБИДВІ перевірки (і по курсу, і по спеціальності)
+            if (matchSpec && matchCourse) {
+                // Показуємо рядок (очищуємо inline-стиль display)
+                row.style.display = "";
+            } else {
+                // Ховаємо рядок, якщо він не підходить під фільтри
+                row.style.display = "none";
+            }
+        }
+    }
+    </script>
 {% endblock %}

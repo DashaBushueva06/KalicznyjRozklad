@@ -4,214 +4,212 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Управління навчальним процесом | Мех-Мат КНУ</title>
+
     <style>
-        /* Глобальні налаштування сайту */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-            background-color: #f4f6f9;
-            color: #333;
+        body { /* Стилізую головне тіло сторінки */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /*Задаю шрифт */
+            margin: 0; /* Прибираю відступи по краях */
+            padding: 0; /* Прибираю відступи, щоб шапка сідала впритул */
+            line-height: 1.6; /* Міжрядковий інтервал */
+            background-color: #f4f6f9; /* світло-сірий фон */
+            color: #333; /* Темно-сірий колір для тексту */
         }
 
-        /* Шапка сайту з логотипом та меню */
-        header {
-            background-color: #1f4e78; /* Фірмовий темно-синій колір */
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            padding: 10px 30px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        header { /* Стилізую планку верхньої шапки */
+            background-color: #1f4e78; /*Темно-синій колір */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* М'яка тінь знизу */
+            padding: 10px 30px; /* Відступи всередині шапки */
+            display: flex; /* Щоб вирівняти елементи в один рядок */
+            align-items: center; /* Центрую логотип і меню по вертикалі */
+            justify-content: space-between; /* Логотип - вліво, меню - вправо */
         }
 
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 15px;
+        .logo-area { /* Стилізую зону з логотипом та назвою системи */
+            display: flex; /* Щоб емблема та текст були в один рядок */
+            align-items: center; /* Вирівнюю картинку герба та текст по одній лінії */
+            gap: 15px; /* Фіксований проміжок між картинкою та текстом */
         }
 
-        .logo-area img {
-            height: 50px; /* Акуратний розмір для твого логотипу */
-            width: auto;
-            object-fit: contain;
+        .logo-area img { /* Стилізую картинку логотипу */
+            height: 50px; /* Обмежую висоту логотипу */
+            width: auto; /* Авто-ширина */
+            object-fit: contain; /* Логотип стиснеться без деформації */
         }
 
-        .logo-area h1 {
-            color: #ffffff;
-            font-size: 20px;
-            margin: 0;
-            font-weight: 600;
-            letter-spacing: 0.5px;
+        .logo-area h1 { /* Стилізую текст головного заголовка "Мех-Мат Система" */
+            color: #ffffff; /* Фарбую текст у чистий білий колір */
+            font-size: 20px; /* Виставляю розмір шрифту */
+            margin: 0; /* Скидаю відступи тегу h1*/
+            font-weight: 600; /* Напівжирне накреслення */
+            letter-spacing: 0.5px; /* Додаю легке розрядження між літерами */
         }
 
-        /* Навігаційна панель */
-        nav {
-            display: flex;
-            gap: 5px;
-        }
-        nav a {
-            text-decoration: none;
-            color: #e2e8f0;
-            font-weight: 500;
-            font-size: 15px;
-            padding: 10px 15px;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-        }
-        nav a:hover {
-            background-color: rgba(255, 255, 255, 0.15);
-            color: #ffffff;
-        }
-        nav a.active {
-            background-color: #ffffff;
-            color: #1f4e78;
+        nav { /* Стилізую контейнер під посилання на розділи сайту */
+            display: flex; /* Вибудовую всі посилання на розділи LMS в один рядок */
+            gap: 5px; /* Роблю проміжки в 5px між кнопками меню */
         }
 
-        /* Контейнер для контенту сторінок */
-        .container {
-            max-width: 1300px;
-            margin: 40px auto;
-            padding: 0 30px;
+        nav a { /* Стилізую кожну окрему кнопку-посилання в меню */
+            text-decoration: none; /* Прибираю стандартні підкреслення лінків */
+            color: #e2e8f0; /* Фарбую неактивні пункти меню у приглушений колір */
+            font-weight: 500; /* Середня товщина літер */
+            font-size: 15px; /* Оптимальний розмір тексту кнопок */
+            padding: 10px 15px; /* Внутрішні відступи кнопки (формую клікабельну зону) */
+            border-radius: 6px; /* Закруглюю кути кнопок */
+            transition: all 0.3s ease; /* Налаштовую плавну анімацію ховер-ефектів */
         }
 
-        h2 {
-            color: #1f4e78;
-            font-size: 28px;
-            margin-top: 0;
-            margin-bottom: 25px;
-            border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 10px;
+        nav a:hover { /* Задаю поведінку кнопки при наведенні мишки */
+            background-color: rgba(255, 255, 255, 0.15); /* Створюю легку напівпрозору підкладку */
+            color: #ffffff; /* Змінюю колір тексту на насичений білий */
         }
 
-        h3 {
-            color: #2c3e50;
-            font-size: 20px;
-            margin-top: 30px;
-            margin-bottom: 15px;
+        nav a.active { /* Фіксую стиль для кнопки тієї сторінки, де ми зараз знаходимося */
+            background-color: #ffffff; /* Роблю кнопку повністю білою */
+            color: #1f4e78; /* Колір тексту міняю на синій для контрасту */
         }
 
-        /* Нові сучасні картки для форм та фільтрів (Flex-панелі) */
-        form.add-form, .filter-box {
-            background: #ffffff;
-            padding: 25px;
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            box-sizing: border-box;
+        .container { /* Стилізую головну контентну оболонку сайту */
+            max-width: 1300px; /* Обмежую максимальну ширину контенту */
+            margin: 40px auto; /* 40px відступ зверху/знизу, auto центрує блок по горизонталі */
+            padding: 0 30px; /* Захисні поля з боків, щоб контент не лип до країв */
         }
 
-        form.add-form h3, .filter-box h3 {
-            margin-top: 0;
-            margin-bottom: 20px;
-            color: #1f4e78;
-            font-size: 18px;
-            border-bottom: 1px solid #f1f5f9;
-            padding-bottom: 10px;
+        h2 { /* Стилізую головні заголовки сторінок розділів */
+            color: #1f4e78; /* Використовую фірмовий синій колір */
+            font-size: 28px; /* Великий помітний розмір заголовка */
+            margin-top: 0; /* Прибираю верхній відступ */
+            margin-bottom: 25px; /* Відступ у 25px знизу до наступного блоку */
+            border-bottom: 2px solid #e2e8f0; /* Проводжу лінію під заголовком */
+            padding-bottom: 10px; /* Задаю простір між текстом заголовка та лінією */
         }
 
-        form.add-form label, .filter-box label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
-            font-size: 14px;
-            color: #4a5568;
+        h3 { /* Стилізую підзаголовки всередині сторінок */
+            color: #2c3e50; /* Спокійний темно-синій відтінок */
+            font-size: 20px; /* Трохи менший розмір, ніж у h2 */
+            margin-top: 30px; /* Роблю відступ зверху від попередніх елементів */
+            margin-bottom: 15px; /* Невеличкий відступ знизу до контенту */
         }
 
-        form.add-form input, form.add-form select, .filter-box select {
-            width: 100%;
-            margin-bottom: 18px;
-            padding: 10px 14px;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 14px;
-            background-color: #fff;
-            color: #333;
-            transition: border-color 0.2s;
+        form.add-form, .filter-box { /* Стилізую форми додавання та блоки фільтрів */
+            background: #ffffff; /* Роблю чистий білий фон (ефект паперової картки) */
+            padding: 25px; /* Задаю просторі поля всередині картки */
+            border: none; /* Прибираю стандартні рамки */
+            border-radius: 12px; /* Закруглюю кути картки на 12 пікселів */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* Вішаю легку тінь, створюючи об'єм */
+            box-sizing: border-box; /* Включаю падінги у загальну ширину (захист від вилізання) */
         }
 
-        form.add-form input:focus, form.add-form select:focus, .filter-box select:focus {
-            outline: none;
-            border-color: #1f4e78;
-            box-shadow: 0 0 0 3px rgba(31, 78, 120, 0.1);
+        form.add-form h3, .filter-box h3 { /* Стилізую заголовки всередині карток */
+            margin-top: 0; /* Прибираю дефолтні відступи */
+            margin-bottom: 20px; /* Задаю відступ знизу до першого інпуту */
+            color: #1f4e78; /* Колір заголовка — синій */
+            border-bottom: 1px solid #f1f5f9; /* Проводжу тонку світлу лінію-розділювач */
+            padding-bottom: 10px; /* Відступ тексту від цієї лінії */
         }
 
-        form.add-form button {
-            width: 100%;
-            padding: 12px;
-            background-color: #1f4e78;
-            color: #ffffff;
-            border: none;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        form.add-form button:hover {
-            background-color: #153552;
+        form.add-form label, .filter-box label { /* Стилізую текстові підписи над полями */
+            display: block; /* Кожен підпис гарантовано стає на окремий рядок */
+            margin-bottom: 6px; /* Зазор від підпису вниз до поля введення */
+            font-weight: 600; /* Жирний шрифт, щоб назви полей чітко читалися */
+            font-size: 14px; /* Компактний розмір для підписів */
+            color: #4a5568; /* Графітовий відтінок тексту */
         }
 
-        /* Стилізація таблиць (М'який, сучасний вигляд без грубих ліній) */
-        .table-container {
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            overflow: hidden;
-            margin-top: 15px;
+        form.add-form input, form.add-form select, .filter-box select { /* Стилізую всі інпути та списки */
+            width: 100%; /* Розтягую поля на всю ширину білої картки */
+            margin-bottom: 18px; /* Роблю відступ вниз до наступного елемента */
+            padding: 10px 14px; /* Текст всередині полей не притиснутий до країв */
+            border: 1px solid #cbd5e1; /* Акуратна сіра рамка поля */
+            border-radius: 8px; /* Закруглені кути полей (8 пікселів) */
+            box-sizing: border-box; /* Рахую ширину поля коректно з падінгами */
+            font-size: 14px; /* Комфортний розмір тексту при введенні */
+            background-color: #fff; /* Білий фон всередині полей */
+            color: #333; /* Темний колір введених літер */
+            transition: border-color 0.2s; /* Плавна зміна кольору рамки за 0.2 сек */
         }
 
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin: 0;
+        form.add-form input:focus, form.add-form select:focus, .filter-box select:focus { /* Стан фокусу */
+            outline: none; /* Прибираю стандартну грубу чорну рамку від браузера */
+            border-color: #1f4e78; /* Фарбую рамку поля в наш синій колір */
+            box-shadow: 0 0 0 3px rgba(31, 78, 120, 0.1); /* Створюю красиве синє сяйво */
         }
 
-        th, td {
-            padding: 14px 18px;
-            text-align: left;
-            font-size: 14px;
+        form.add-form button { /* Стилізую кнопки відправки форм (наприклад, "Додати") */
+            width: 100%; /* Розтягую кнопку на всю ширину форми */
+            padding: 12px; /* Роблю кнопку високою та зручною для кліку */
+            background-color: #1f4e78; /* Колір кнопки — наш синій */
+            color: #ffffff; /* Текст на кнопці робую білим */
+            border: none; /* Прибираю стандартні обводки кнопок */
+            border-radius: 8px; /* Закруглюю кути кнопки під загальний стиль */
+            font-size: 15px; /* Хороший читабельний розмір тексту */
+            font-weight: bold; /* Роблю напис жирним */
+            cursor: pointer; /* Курсор стає "пальчиком" при наведенні */
+            transition: background-color 0.2s; /* Плавна зміна кольору за 0.2 сек */
         }
 
-        th {
-            background-color: #f8fafc;
-            color: #4a5568;
-            font-weight: 600;
-            border-bottom: 2px solid #edf2f7;
-            text-transform: uppercase;
-            font-size: 12px;
-            letter-spacing: 0.5px;
+        form.add-form button:hover { /* Ефект при наведенні на кнопку */
+            background-color: #153552; /* Роблю фон кнопки трохи темнішим */
         }
 
-        td {
-            border-bottom: 1px solid #edf2f7;
-            color: #2d3748;
+        .table-container { /* Захисна обгортка для таблиць */
+            background: #ffffff; /* Білий фон підкладки таблиці */
+            border-radius: 12px; /* Закруглюю кути картки з таблицею */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* Додаю м'яку об'ємну тінь */
+            overflow: hidden; /* Зрізає гострі кути внутрішньої таблиці під радіус 12px */
+            margin-top: 15px; /* Невеличкий відступ зверху */
         }
 
-        tr:last-child td {
-            border-bottom: none;
+        table { /* Стилізую саму HTML-таблицю */
+            border-collapse: collapse; /* Склеюю подвійні рамки сусідніх клітинок в одну лінію */
+            width: 100%; /* Розтягую таблицю на всю ширину */
+            margin: 0; /* Прибираю зовнішні відступи */
         }
 
-        tr:hover td {
-            background-color: #f8fafc; /* Підсвічування рядка при наведенні мишкою */
+        th, td { /* Базові правила для комірок */
+            padding: 14px 18px; /* Просторі відступи всередині клітинок */
+            text-align: left; /* Вирівнюю текст по лівому краю */
+            font-size: 14px; /* Стандартний розмір шрифту даних */
         }
 
-        /* Кнопки видалення у вигляді акуратних баджів */
-        .delete-btn {
-            color: #e53e3e;
-            background: rgba(229, 62, 62, 0.1);
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
+        th { /* Особисті стилі для шапки таблиці */
+            background-color: #f8fafc; /* Дуже світлий сіро-блакитний фон */
+            color: #4a5568; /* Графітовий колір тексту */
+            font-weight: 600; /* Напівжирний шрифт */
+            border-bottom: 2px solid #edf2f7; /* Чітка нижня лінія під шапкою */
+            text-transform: uppercase; /* Автоматично робую літери ВЕЛИКИМИ */
+            font-size: 12px; /* Зменшую розмір тексту шапки */
+            letter-spacing: 0.5px; /* Збільшую проміжки між літерами */
         }
-        .delete-btn:hover {
-            background-color: #e53e3e;
-            color: #ffffff;
+
+        td { /* Комірки з даними */
+            border-bottom: 1px solid #edf2f7; /* Тонка лінія між рядками даних */
+            color: #2d3748; /* Темно-вугільний колір тексту */
+        }
+
+        tr:last-child td { /* Самий останній рядок */
+            border-bottom: none; /* Прибираю нижню лінію, щоб не псувала закруглений низ */
+        }
+
+        tr:hover td { /* Коли користувач наводить мишку на рядок */
+            background-color: #f8fafc; /* Рядок плавно підсвічується легким фоном */
+        }
+
+        .delete-btn { /* Стилізую кнопки видалення записів */
+            color: #e53e3e; /* Червоний колір тексту */
+            background: rgba(229, 62, 62, 0.1); /* Легкий напівпрозорий червоний фон */
+            border: none; /* Прибираю рамки */
+            padding: 6px 12px; /* Компактні відступи всередині */
+            border-radius: 6px; /* Закруглюю кути */
+            font-size: 13px; /* Компактний розмір шрифту */
+            font-weight: 500; /* Середня товщина літер */
+            cursor: pointer; /* Курсор стає "пальчиком" */
+            transition: all 0.2s ease; /* Плавний перехід за 0.2 секунди */
+        }
+
+        .delete-btn:hover { /* Ховер кнопки видалення */
+            background-color: #e53e3e; /* Суцільний червоний колір фону */
+            color: #ffffff; /* Білий колір тексту */
         }
     </style>
 </head>
@@ -222,6 +220,7 @@
             <img src="{{ url_for('static', filename='Logo.png') }}" alt="Мех-Мат Лого">
             <h1>Мех-Мат Система</h1>
         </div>
+
         <nav>
             <a href="/">Головна</a>
             <a href="/students">Студенти</a>
@@ -239,11 +238,15 @@
     </div>
 
     <script>
+        // Натискаю на пошук усіх посилань (тегів 'a') всередині навігаційної панелі 'nav' і запускаю цикл
         document.querySelectorAll('nav a').forEach(link => {
+            // Перевіряю: чи збігається значення атрибута 'href' кнопки з поточним шляхом в адресному рядку браузера
             if (link.getAttribute('href') === window.location.pathname) {
+                // Якщо шляхи збіглися, додаю цій конкретній кнопці CSS-клас 'active' (кнопка стає повністю білою)
                 link.classList.add('active');
             }
         });
     </script>
+
 </body>
 </html>

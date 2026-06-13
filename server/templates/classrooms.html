@@ -1,8 +1,9 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {# Успадковую всю базову HTML-структуру з base.html #}
+{% block content %} {# Починаю заповнювати унікальний контент саме цієї сторінки #}
 
-{% block content %}
     <h2>Управління аудиторіями</h2>
 
+    {# Відкриваю HTML-форму для додавання нових аудиторій #}
     <form class="add-form" action="/classrooms/add" method="POST" style="margin-bottom: 25px;">
         <h3>Додати аудиторію</h3>
 
@@ -23,17 +24,19 @@
             <th>Місткість</th>
             <th>Дія</th>
         </tr>
-        {% for classroom in classrooms %}
+
+        {% for classroom in classrooms %} {# Запускаю цикл: сервер передав сюди масив 'classrooms'. Я по черзі дістаю кожну 'classroom' #}
         <tr>
             <td>{{ classroom.id }}</td>
             <td>{{ classroom.room_number }}</td>
             <td>{{ classroom.capacity }}</td>
+
             <td>
                 <form action="/classrooms/{{ classroom.id }}/delete" method="POST" style="margin:0; padding:0; background:none; border:none; width:auto;">
                     <button type="submit" style="color: red; background: none; border: none; cursor: pointer; text-decoration: underline; padding: 0;">Видалити</button>
                 </form>
             </td>
         </tr>
-        {% endfor %}
+        {% endfor %} {# Закриваю цикл #}
     </table>
-{% endblock %}
+{% endblock %} {# Закриваю блок 'content' #}
